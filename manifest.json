@@ -1,0 +1,30 @@
+{
+  "os": "LoL OS",
+  "version": "1.0.0",
+  "apps": [
+    {
+      "id": "browser",
+      "name": "Hex Browser",
+      "icon": "🌐",
+      "entry": "./apps/browser/app.js",
+      "ui":    "./apps/browser/ui.html",
+      "installed": true
+    },
+    {
+      "id": "sona_music",
+      "name": "Sona Music",
+      "icon": "🎵",
+      "entry": "./apps/sona_music/app.js",
+      "ui":    "./apps/sona_music/ui.html",
+      "installed": true
+    },
+    {
+      "id": "app_store",
+      "name": "Hex Store",
+      "icon": "🛒",
+      "entry": "./apps/app_store/app.js",
+      "ui":    "./apps/app_store/ui.html",
+      "installed": true
+    }
+  ]
+}

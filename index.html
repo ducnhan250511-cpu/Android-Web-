@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="theme-color" content="#010a13" />
+  <title>LoL OS - Hextech</title>
+  <link rel="stylesheet" href="./assets/css/hextech-theme.css" />
+  <link rel="stylesheet" href="./assets/css/system-ui.css" />
+</head>
+<body>
+  <!-- ================= BOOT SCREEN ================= -->
+  <section id="boot-screen">
+    <div class="boot__hex">
+      <div class="boot__ring"></div>
+      <div class="boot__core">⚙️</div>
+    </div>
+    <h1 class="boot__title">LOL&nbsp;OS</h1>
+    <p class="boot__sub">HEXTECH ARCHITECTURE - v1.0</p>
+    <div class="boot__bar"><span></span></div>
+    <p id="boot-status" class="boot__status">Đang khởi tạo Hextech...</p>
+  </section>
+
+  <!-- ================= DEVICE SHELL ================= -->
+  <div id="device" aria-hidden="true">
+    <header id="status-bar">
+      <span class="status__left">⚡ LoL OS</span>
+      <span class="status__right"><span id="clock-status">00:00</span></span>
+    </header>
+    <main id="desktop"></main>
+    <footer id="taskbar">
+      <div id="taskbar-apps" class="taskbar__apps"></div>
+      <div id="taskbar-tray" class="taskbar__tray">
+        <span id="clock-taskbar">00:00</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ================= SYSTEM BOOTSTRAP ================= -->
+  <script type="module">
+    import { WindowManager } from './core/WindowManager.js';
+    import { Launcher }      from './core/Launcher.js';
+
+    const boot    = document.getElementById('boot-screen');
+    const status  = document.getElementById('boot-status');
+    const device  = document.getElementById('device');
+    const sleep   = ms => new Promise(r => setTimeout(r, ms));
+
+    const BOOT_STEPS = [
+      'Nạp Hextech Core...',
+      'Khởi tạo Window Manager...',
+      'Đồng bộ Launcher...',
+      'Sẵn sàng'
+    ];
+
+    async function playBootSequence() {
+      for (const step of BOOT_STEPS) {
+        status.textContent = step;
+        await sleep(350);
+      }
+      boot.classList.add('is-hidden');
+      device.classList.add('is-on');
+      device.setAttribute('aria-hidden', 'false');
+    }
+
+    function startClock() {
+      const tick = () => {
+        const t = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('clock-status').textContent  = t;
+        document.getElementById('clock-taskbar').textContent = t;
+      };
+      tick();
+      setInterval(tick, 10_000);
+    }
+
+    (async function main() {
+      startClock();
+      const windowManager = new WindowManager({
+        desktop:     document.getElementById('desktop'),
+        taskbarApps: document.getElementById('taskbar-apps'),
+      });
+      const launcher = new Launcher({
+        desktop: document.getElementById('desktop'),
+        windowManager,
+      });
+      await launcher.init();
+      await playBootSequence();
+      window.LoLOS = { windowManager, launcher };
+    })();
+  </script>
+</body>
+</html>
